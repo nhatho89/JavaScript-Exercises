@@ -75,7 +75,7 @@ var masterChanger = function(masterAmount, masterCoins) {
   masterCoins = masterCoins.sort(function(a, b) {
     return b - a;
   });
-  
+
   var makeChange = function(amount, coins) {
     if (amount <= 0) {
       return [];
@@ -111,6 +111,53 @@ var masterChanger = function(masterAmount, masterCoins) {
     }
   });
 
+};
+
+Array.prototype.empty = function () {
+  return this.length === 0;
+};
+
+Array.prototype.mergeSort = function () {
+  if (this.length < 2) {
+    return this;
+  }
+
+  var merge = function(left, right) {
+    var mergedArray = [];
+
+
+    while (!left.empty() && !right.empty()) {
+      if (left.first() < right.first()) {
+        mergedArray.push(left.shift());
+      }
+      else {
+        mergedArray.push(right.shift());
+      }
+    }
+    return mergedArray.concat(left).concat(right);
+  };
+
+  var pivot = Math.floor(this.length / 2);
+  var leftArray = this.take(pivot).mergeSort();
+  var rightArray = this.drop(pivot).mergeSort();
+  return merge(leftArray, rightArray);
+};
+
+
+Array.prototype.subsets = function () {
+  var subArr = this.slice();
+  if (this.empty()) {
+    return [[]];
+  }
+
+  var lastValue = subArr.pop();
+  var prevSubset = subArr.subsets();
+
+  var finalSubsets = [];
+  prevSubset.forEach(function(el){
+    finalSubsets.push(el.concat(lastValue));
+  });
+  return prevSubset.concat(finalSubsets);
 };
 
 
